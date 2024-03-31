@@ -11,10 +11,9 @@ xml_file = 'kanjivg-20220427.xml'
 tree = ET.parse(xml_file)
 root = tree.getroot()
 
-data_dir = 'data/'
-images_dir = data_dir + 'images/'
-if not os.path.exists(images_dir):
-    os.makedirs(images_dir)
+data_dir = 'stable-diffusion/data/kanji'
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
 
 characters = root.findall('.//kanji')
 print(f"{len(characters)} characters")
@@ -27,6 +26,10 @@ def svg_to_image(character, directory):
         path.set('fill', 'none')
         path.set('stroke', 'black')
 
+    # white background
+    background = ET.Element("rect", width="128", height="128", fill="white")
+    svg_root.insert(0, background)
+
     svg_str = ET.tostring(svg_root).decode('utf-8')
     svg_data = f"<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 100 100'>{svg_str}</svg>"
     image_data = cairosvg.svg2png(svg_data)
@@ -35,10 +38,10 @@ def svg_to_image(character, directory):
     image.save(os.path.join(directory, f"{character_id}.png"))
 
 for char in characters:
-    svg_to_image(char, images_dir)
+    svg_to_image(char, data_dir)
 
 # open sample image
-# image = Image.open(os.path.join(images_dir, '091d6.png'))
+# image = Image.open(os.path.join(data_dir, '091d6.png'))
 # image.show()
 
 # 2. save english descriptions to descriptions.txt
@@ -59,6 +62,6 @@ for desc in descriptions:
     
     # get english eaning and save to description.txt
     # format: ucs_id.png|english meaning 1|english meaning 2|...
-    if os.path.exists(f"{images_dir}/{ucs_id.text.zfill(5)}.png"):
+    if os.path.exists(f"{data_dir}/{ucs_id.text.zfill(5)}.png"):
         with open(f"{data_dir}/descriptions.txt", "a") as f:
             f.write(f"{ucs_id.text.zfill(5)}.png|{'|'.join(english_meanings)}\n")
