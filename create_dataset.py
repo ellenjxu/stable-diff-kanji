@@ -11,7 +11,8 @@ xml_file = 'kanjivg-20220427.xml'
 tree = ET.parse(xml_file)
 root = tree.getroot()
 
-images_dir = 'data/images/'
+data_dir = 'data/'
+images_dir = data_dir + 'images/'
 if not os.path.exists(images_dir):
     os.makedirs(images_dir)
 
@@ -37,11 +38,10 @@ for char in characters:
     svg_to_image(char, images_dir)
 
 # open sample image
-image = Image.open(os.path.join(images_dir, '091d6.png'))
-image.show()
+# image = Image.open(os.path.join(images_dir, '091d6.png'))
+# image.show()
 
 # 2. save english descriptions to descriptions.txt
-
 xml_text_file = 'kanjidic2.xml'
 tree = ET.parse(xml_text_file)
 root = tree.getroot()
@@ -59,5 +59,6 @@ for desc in descriptions:
     
     # get english eaning and save to description.txt
     # format: ucs_id.png|english meaning 1|english meaning 2|...
-    with open(f"data/descriptions.txt", "a") as f:
-        f.write(f"{ucs_id.text.zfill(5)}.png|{'|'.join(english_meanings)}\n")
+    if os.path.exists(f"{images_dir}/{ucs_id.text.zfill(5)}.png"):
+        with open(f"{data_dir}/descriptions.txt", "a") as f:
+            f.write(f"{ucs_id.text.zfill(5)}.png|{'|'.join(english_meanings)}\n")
