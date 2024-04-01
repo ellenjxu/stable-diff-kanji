@@ -11,7 +11,7 @@ xml_file = 'kanjivg-20220427.xml'
 tree = ET.parse(xml_file)
 root = tree.getroot()
 
-data_dir = 'stable-diffusion/data/kanji'
+data_dir = 'kanji'
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
