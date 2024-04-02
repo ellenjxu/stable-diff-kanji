@@ -5,6 +5,7 @@ import cairosvg
 from PIL import Image
 from io import BytesIO
 import os
+import json
 
 # 1. convert svg images into raster (pixel) images indexed by character code
 xml_file = 'kanjivg-20220427.xml'
@@ -65,3 +66,17 @@ for desc in descriptions:
     if os.path.exists(f"{data_dir}/{ucs_id.text.zfill(5)}.png"):
         with open(f"{data_dir}/descriptions.txt", "a") as f:
             f.write(f"{ucs_id.text.zfill(5)}.png|{'|'.join(english_meanings)}\n")
+
+# 3. convert to huggingface jsonl
+# https://huggingface.co/docs/datasets/v2.4.0/en/image_load#imagefolder-with-metadata
+with open(f"{data_dir}/metadata.jsonl", "w") as json_file:
+    for image_file in os.listdir(data_dir):
+        if image_file.endswith('.png'):
+        # find matching caption by searching descriptions.txt
+            with open(f"{data_dir}/descriptions.txt", "r") as f:
+                for line in f:
+                    if line.split('|')[0] == image_file:
+                        caption = line.split('|')[1].strip()
+                        break
+            metadata = {"file_name": image_file, "text": caption}
+            json_file.write(f"{json.dumps(metadata)}\n")
