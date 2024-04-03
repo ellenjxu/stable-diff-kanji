@@ -13,5 +13,5 @@ data/
 │ └── descriptions.txt
 ```
 
-2. Modify `train.yaml` config file
-3. Train Stable Diffusion1.4 model: `python3 stable-diffusion/train.py --base train.yaml --train True`
+2. Run ./train.sh
+3. Generate images with `python3 inference.py --prompt="sakana ai" --num_images=10`

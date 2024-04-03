@@ -1,3 +1,4 @@
-kanji/
+data/
+outputs/
 *.ipynb
 stable-diffusion/
