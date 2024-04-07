@@ -14,4 +14,4 @@ data/
 ```
 
 2. Run ./train.sh
-3. Generate images with `python3 inference.py --prompt="sakana ai" --num_images=10`
+3. Generate images with `python3 inference.py --prompt="prompt" --num_images=10`
